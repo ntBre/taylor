@@ -3,8 +3,9 @@ pub use checks::*;
 pub mod checks;
 
 /// a taylor series expansion of f(x1, x2, ... n) of order m-1
+#[derive(Debug)]
 pub struct Taylor {
-    forces: Vec<Vec<usize>>,
+    pub forces: Vec<Vec<usize>>,
 }
 
 impl Taylor {

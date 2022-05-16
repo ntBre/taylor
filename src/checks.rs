@@ -1,6 +1,27 @@
+use std::ops::{Index, IndexMut};
+
+#[derive(Clone, Debug)]
 pub struct Checks(pub [[usize; 2]; 3]);
 
+impl Index<(usize, usize)> for Checks {
+    type Output = usize;
+
+    fn index(&self, index: (usize, usize)) -> &Self::Output {
+        &self.0[index.0][index.1]
+    }
+}
+
+impl IndexMut<(usize, usize)> for Checks {
+    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
+        &mut self.0[index.0][index.1]
+    }
+}
+
 impl Checks {
+    pub fn new() -> Self {
+        Self([[0, 0], [0, 0], [0, 0]])
+    }
+
     /// ModCheck computes a mod check of one or more subsets of digits. I'm
     /// honestly not too sure what it means, but it does something in taylor.py.
     /// Also, taylor.py takes modchecks as a dict of {2: [][]int}, so I've
