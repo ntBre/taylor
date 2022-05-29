@@ -3,7 +3,7 @@ pub use checks::*;
 pub mod checks;
 
 /// a taylor series expansion of f(x1, x2, ... n) of order m-1
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Taylor {
     pub forces: Vec<Vec<usize>>,
 }
