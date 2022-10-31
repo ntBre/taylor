@@ -1,4 +1,8 @@
 // could I use const generics for these for m and n?
+use nalgebra as na;
+use rust_anpass::Anpass;
+use symm::{Irrep, PointGroup};
+
 pub use checks::*;
 pub mod checks;
 
@@ -11,7 +15,109 @@ pub struct Taylor {
     pub forces: Vec<Vec<usize>>,
 }
 
+#[derive(Clone, Debug)]
+pub struct Disps(Vec<Vec<isize>>);
+
+impl Disps {
+    pub fn to_intder(&self, step_size: f64) -> Vec<Vec<f64>> {
+        let mut ret = Vec::new();
+        for disp in &self.0 {
+            let disp: Vec<_> =
+                disp.iter().map(|i| *i as f64 * step_size).collect();
+            ret.push(disp);
+        }
+        ret
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+}
+
 impl Taylor {
+    /// generate the Taylor series mod and equivalence checks from `irreps` in
+    /// `pg`
+    pub fn make_checks(
+        irreps: Vec<(usize, Irrep)>,
+        pg: &PointGroup,
+    ) -> (Option<Checks>, Option<Checks>) {
+        use symm::Irrep::*;
+        use symm::PointGroup::*;
+        match pg {
+            C1 => (None, None),
+            C2 { axis: _ } => {
+                todo!();
+            }
+            Cs { plane: _ } => {
+                // only A'' modes go in checks[0], other two checks are 0-0
+                let mut checks = Checks::default();
+                for i in irreps {
+                    match i.1 {
+                        Ap => (),
+                        App => {
+                            if checks[(0, 0)] == 0 {
+                                checks[(0, 0)] = i.0 + 1;
+                                checks[(0, 1)] = i.0 + 1;
+                            } else if i.0 + 1 > checks[(0, 1)] {
+                                checks[(0, 1)] = i.0 + 1;
+                            }
+                        }
+                        _ => panic!("non-Cs irrep found in Cs point group"),
+                    }
+                }
+                (Some(checks.clone()), Some(checks))
+            }
+            C2v { axis: _, planes: _ } => {
+                let mut checks = Checks::default();
+                // first one you hit goes in checks.0, second goes in checks.1
+                for i in irreps {
+                    match i.1 {
+                        A1 => (),
+                        B1 => {
+                            if checks[(0, 0)] == 0 {
+                                checks[(0, 0)] = i.0 + 1;
+                                checks[(0, 1)] = i.0 + 1;
+                            } else if i.0 + 1 > checks[(0, 1)] {
+                                checks[(0, 1)] = i.0 + 1;
+                            }
+                        }
+                        B2 => {
+                            if checks[(1, 0)] == 0 {
+                                checks[(1, 0)] = i.0 + 1;
+                                checks[(1, 1)] = i.0 + 1;
+                            } else if i.0 + 1 > checks[(1, 1)] {
+                                checks[(1, 1)] = i.0 + 1;
+                            }
+                        }
+                        A2 => {
+                            if checks[(2, 0)] == 0 {
+                                checks[(2, 0)] = i.0 + 1;
+                                checks[(2, 1)] = i.0 + 1;
+                            } else if i.0 + 1 > checks[(2, 1)] {
+                                checks[(2, 1)] = i.0 + 1;
+                            }
+                        }
+                        _ => panic!("non-C2v irrep found in C2v point group"),
+                    }
+                }
+                (Some(checks.clone()), Some(checks))
+            }
+            D2h { axes: _, planes: _ } => todo!(),
+            C3v { axis: _, plane: _ } => todo!(),
+            D3h {
+                c3: _,
+                c2: _,
+                sh: _,
+                sv: _,
+            } => todo!(),
+        }
+    }
+
     /// returns the directly-derived Cartesian product row, where index is the
     /// desired row index, n is the truncation order and m is the number of
     /// variables in the Taylor series expansion. This corresponds to Algorithm
@@ -113,7 +219,7 @@ impl Taylor {
 
     /// return the displacements associated with the expansion described by
     /// `self`
-    pub fn disps(&self) -> Vec<Vec<isize>> {
+    pub fn disps(&self) -> Disps {
         let mut disps = Vec::new();
         for row in &self.forces {
             let mut indices = Vec::new();
@@ -149,7 +255,38 @@ impl Taylor {
         // sort -u on disps
         disps.sort();
         disps.dedup();
-        disps
+        Disps(disps)
+    }
+
+    pub fn to_anpass(
+        &self,
+        taylor_disps: &Disps,
+        energies: &[f64],
+        step_size: f64,
+    ) -> Anpass {
+        let mut disps = Vec::new();
+        for disp in &taylor_disps.0 {
+            for coord in disp {
+                disps.push(*coord as f64 * step_size);
+            }
+        }
+        let tdl = taylor_disps.len();
+        let fl = self.forces.len();
+        let mut fs = Vec::new();
+        for row in &self.forces {
+            for c in row {
+                fs.push(*c as i32);
+            }
+        }
+        Anpass {
+            disps: na::DMatrix::from_row_slice(tdl, disps.len() / tdl, &disps),
+            energies: na::DVector::from_row_slice(energies),
+            exponents: na::DMatrix::from_column_slice(
+                self.forces[0].len(),
+                fl,
+                &fs,
+            ),
+            bias: None,
+        }
     }
 }
-

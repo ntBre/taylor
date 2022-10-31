@@ -6,6 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+symm = { path = "/home/brent/Projects/symm" }
+nalgebra = "0.31.1"
+rust-anpass = { path = "/home/brent/Projects/rust-anpass" }
 
 [workspace]
 members = [
