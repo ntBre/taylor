@@ -5,3 +5,10 @@ version = 3
 [[package]]
 name = "taylor"
 version = "0.1.0"
+
+[[package]]
+name = "taylor-bin"
+version = "0.1.0"
+dependencies = [
+ "taylor",
+]
