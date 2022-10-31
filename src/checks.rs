@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Checks(pub [[usize; 2]; 3]);
 
 impl Index<(usize, usize)> for Checks {
@@ -18,16 +18,12 @@ impl IndexMut<(usize, usize)> for Checks {
 }
 
 impl Checks {
-    pub fn new() -> Self {
-        Self([[0, 0], [0, 0], [0, 0]])
-    }
-
     /// ModCheck computes a mod check of one or more subsets of digits. I'm
     /// honestly not too sure what it means, but it does something in taylor.py.
     /// Also, taylor.py takes modchecks as a dict of {2: [][]int}, so I've
     /// omitted the variable k=2 and hard-coded it since that's all we usually
     /// use.
-    pub(crate) fn mod_check(&self, row: &Vec<usize>) -> bool {
+    pub(crate) fn mod_check(&self, row: &[usize]) -> bool {
         for check in self.0 {
             if check[0] < 1 {
                 continue;
@@ -46,7 +42,7 @@ impl Checks {
     /// Not sure what this means either, but it does something in taylor.py.
     /// Like ModCheck, this takes a dict of {1: eqchecks} in the Python version,
     /// so I've ommitted the variable for the 1 since that's all we use.
-    pub(crate) fn eq_check(&self, row: &Vec<usize>) -> bool {
+    pub(crate) fn eq_check(&self, row: &[usize]) -> bool {
         for check in self.0 {
             if check[0] < 1 {
                 return false;

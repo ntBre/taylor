@@ -98,7 +98,7 @@ impl Taylor {
                 for y in &pool {
                     let l = x.len() + 1;
                     let mut a = x.clone();
-                    a.resize(l as usize, 0);
+                    a.resize(l, 0);
                     a[l - 1] = *y;
                     tmp.push(a);
                 }
@@ -121,7 +121,7 @@ impl Taylor {
                     values.push(digit);
                 }
             }
-            if values.len() == 0 {
+            if values.is_empty() {
                 disps.push(row.iter().map(|u| *u as isize).collect());
                 continue;
             }
