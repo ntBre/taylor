@@ -3,6 +3,34 @@ use intder::Intder;
 use symm::{Atom, Molecule};
 use taylor::Taylor;
 
+// borrowed from summarize-bin
+fn irrep(ir: &symm::Irrep) -> &'static str {
+    match ir {
+        symm::Irrep::A => "a",
+        symm::Irrep::B => "b",
+        symm::Irrep::Ap => "a'",
+        symm::Irrep::App => "a''",
+        symm::Irrep::A1 => "a_1",
+        symm::Irrep::B2 => "b_2",
+        symm::Irrep::B1 => "b_1",
+        symm::Irrep::A2 => "a_2",
+        symm::Irrep::Ag => "a_g",
+        symm::Irrep::B1g => "b_{1g}",
+        symm::Irrep::B2g => "b_{2g}",
+        symm::Irrep::B3g => "b_{3g}",
+        symm::Irrep::Au => "a_u",
+        symm::Irrep::B1u => "b_{1u}",
+        symm::Irrep::B2u => "b_{2u}",
+        symm::Irrep::B3u => "b_{3u}",
+        symm::Irrep::A1p => "a_1'",
+        symm::Irrep::A2p => "a_2'",
+        symm::Irrep::Ep => "e'",
+        symm::Irrep::A1pp => "a_1''",
+        symm::Irrep::A2pp => "a_2''",
+        symm::Irrep::Epp => "e''",
+    }
+}
+
 /// generate intder and anpass input files with a taylor series expansion
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -22,6 +50,10 @@ struct Args {
     /// step size
     #[arg(short, long, default_value_t = 0.005)]
     step_size: f64,
+
+    /// print the SICs in LaTeX for papers
+    #[arg(short, long, default_value_t = false)]
+    tex: bool,
 }
 
 // this is pieced together from parts of pbqff, but it's not clear how to reuse
@@ -79,7 +111,78 @@ fn main() -> std::io::Result<()> {
     intder.symmetry_internals = new_sics;
 
     println!("\nSymmetry Internal Coordinates:");
-    intder.print_sics(&mut std::io::stdout(), &just_irreps);
+    if cfg.tex {
+        println!(r"\begin{{align}}");
+        let nsic = intder.symmetry_internals.len();
+        assert_eq!(intder.symmetry_internals.len(), just_irreps.len());
+        for (i, sic) in intder.symmetry_internals.iter().enumerate() {
+            let len = sic.iter().filter(|&&s| s != 0.0).count();
+            let (frac, close) = match len {
+                1 => ("", ""),
+                2 => (r"\frac{1}{\sqrt{2}}[", "]"),
+                _ => panic!("unrecognized number of simple internals, {len}"),
+            };
+            print!("S_{{{i:<2}}}({}) &= & {}", irrep(&just_irreps[i]), frac);
+            // number of siics printed so far
+            let mut nprt = 0;
+            for (j, s) in sic.iter().enumerate() {
+                if *s != 0.0 {
+                    if nprt > 0 {
+                        let sign = match s.signum() as isize {
+                            -1 => "-",
+                            1 => "+",
+                            _ => panic!("it's NaN"),
+                        };
+                        print!(" {sign} ");
+                    }
+                    let l = &intder.simple_internals[j];
+                    print!(
+                        "{}",
+                        match &l {
+                            intder::Siic::Stretch(a, b) => format!(
+                                "r(\\text{{{}}}_{}-\\text{{{}}}_{})",
+                                intder.atoms[*a].label,
+                                a + 1,
+                                intder.atoms[*b].label,
+                                b + 1
+                            ),
+                            intder::Siic::Bend(a, b, c) =>
+				format!(
+                                "\\angle(\\text{{{}}}_{}-\\text{{{}}}_{}-\\text{{{}}}_{})",
+                                intder.atoms[*a].label,
+                                a + 1,
+                                intder.atoms[*b].label,
+                                b + 1,
+                                intder.atoms[*c].label,
+                                c + 1
+                            ),
+                            intder::Siic::Torsion(a, b, c, d) =>
+				format!(
+                                    "\\tau(\\text{{{}}}_{}-\\text{{{}}}_{}\
+				     -\\text{{{}}}_{}-\\text{{{}}}_{})",
+                                intder.atoms[*a].label,
+                                a + 1,
+                                intder.atoms[*b].label,
+                                b + 1,
+                                intder.atoms[*c].label,
+                                c + 1,
+                                intder.atoms[*d].label,
+                                d + 1
+                            ),
+			    _ => panic!("tell brent to support {}", l),
+                            // intder::Siic::Lin1(_, _, _, _) => todo!(),
+                            // intder::Siic::Out(_, _, _, _) => todo!(),
+                        }
+                    );
+                    nprt += 1;
+                }
+            }
+            println!("{close}{}", if i < nsic - 1 { "\\\\" } else { "" });
+        }
+        println!(r"\end{{align}}");
+    } else {
+        intder.print_sics(&mut std::io::stdout(), &just_irreps);
+    }
 
     if cfg.write {
         // generate checks
