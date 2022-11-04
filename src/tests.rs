@@ -77,7 +77,7 @@ fn test_forces_with_zero_checks() {
 #[test]
 fn test_disps() {
     let got = Taylor::new(5, 3, None, None).disps();
-    let mut want = load_vec_isize("testfiles/dispu.h2o.txt");
+    let mut want = Disps(load_vec_isize("testfiles/dispu.h2o.txt"));
     // the order doesn't matter, so let rust sort both
     want.sort();
     assert_eq!(got, want);
@@ -92,7 +92,7 @@ fn test_disps_with_checks() {
         Some(Checks([[5, 7], [8, 8], [9, 9]])),
     )
     .disps();
-    let mut want = load_vec_isize("testfiles/dispu.c3h2.mod.txt");
+    let mut want = Disps(load_vec_isize("testfiles/dispu.c3h2.mod.txt"));
     want.sort();
     assert_eq!(got, want);
 }
@@ -106,7 +106,7 @@ fn test_disps_with_zero_checks() {
         Some(Checks([[3, 3], [0, 0], [0, 0]])),
     )
     .disps();
-    let mut want = load_vec_isize("testfiles/dispu.h2o.mod.txt");
+    let mut want = Disps(load_vec_isize("testfiles/dispu.h2o.mod.txt"));
     want.sort();
     assert_eq!(got, want);
 }

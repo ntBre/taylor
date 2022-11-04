@@ -1,6 +1,10 @@
 test:
 	cargo test -- --nocapture --test-threads=1
 
+.PHONY: run
+run:
+	cargo run -p taylor-bin testfiles/intder.in $(ARGS)
+
 build:
     # see https://msfjarvis.dev/posts/building-static-rust-binaries-for-linux
 	RUSTFLAGS='-C target-feature=+crt-static' \

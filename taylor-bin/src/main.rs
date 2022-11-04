@@ -122,7 +122,12 @@ fn main() -> std::io::Result<()> {
                 2 => (r"\frac{1}{\sqrt{2}}[", "]"),
                 _ => panic!("unrecognized number of simple internals, {len}"),
             };
-            print!("S_{{{i:<2}}}({}) &= & {}", irrep(&just_irreps[i]), frac);
+            print!(
+                "S_{{{:<2}}}({}) &= & {}",
+                i + 1,
+                irrep(&just_irreps[i]),
+                frac
+            );
             // number of siics printed so far
             let mut nprt = 0;
             for (j, s) in sic.iter().enumerate() {

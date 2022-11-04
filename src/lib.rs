@@ -15,7 +15,7 @@ pub struct Taylor {
     pub forces: Vec<Vec<usize>>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Disps(Vec<Vec<isize>>);
 
 impl Disps {
@@ -36,6 +36,11 @@ impl Disps {
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.len() == 0
+    }
+
+    #[cfg(test)]
+    pub(crate) fn sort(&mut self) {
+        self.0.sort()
     }
 }
 
