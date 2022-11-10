@@ -1,6 +1,6 @@
 use clap::Parser;
 use intder::Intder;
-use symm::{Atom, Molecule};
+use symm::{Atom, Molecule, Pg};
 use taylor::Taylor;
 
 // borrowed from summarize-bin
@@ -60,6 +60,7 @@ struct Args {
 // any of the parts
 fn main() -> std::io::Result<()> {
     let cfg = Args::parse();
+    // expects an Intder without dummy atoms
     let mut intder = Intder::load_file(&cfg.infile);
     let pairs = intder.geom.0.iter().zip(&intder.atoms);
     let mut atoms = Vec::new();
@@ -68,10 +69,22 @@ fn main() -> std::io::Result<()> {
     }
     let mol = {
         let mut mol = Molecule::new(atoms);
+	// NOTE could actually check for linearity here by returning rotor type
+	// from normalize
         mol.normalize();
         mol
     };
-    let pg = mol.point_group_approx(cfg.eps);
+    let pg = {
+        let mut pg = mol.point_group_approx(cfg.eps);
+        if cfg.write && pg.is_d2h() {
+            eprintln!(
+                "full point group is D2h, using C2v subgroup. \
+		       rerun without -w to print full symmetry"
+            );
+            pg = pg.subgroup(Pg::C2v).unwrap();
+        };
+        pg
+    };
 
     println!("Normalized Geometry:\n{:20.12}", mol);
     println!("Point Group = {}", pg);
@@ -86,13 +99,21 @@ fn main() -> std::io::Result<()> {
     }
     intder.disps = disps;
     intder.geom = mol.clone().into();
+    let ndum = if let Some(axis) = pg.axis() {
+        intder.add_dummies(axis)
+    } else {
+        0
+    };
     let disps = intder.convert_disps();
 
     let atomic_numbers = mol.atomic_numbers();
     let mut irreps = Vec::new();
     for (i, disp) in disps.iter().enumerate() {
         let disp = disp.as_slice();
-        let m = Molecule::from_slices(atomic_numbers.clone(), disp);
+        let m = Molecule::from_slices(
+            atomic_numbers.clone(),
+            &disp[..disp.len() - 3 * ndum],
+        );
         let irrep = match m.irrep_approx(&pg, cfg.eps) {
             Ok(rep) => rep,
             Err(e) => panic!("failed on coord {} with {}", i, e.msg()),
