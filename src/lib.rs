@@ -55,7 +55,8 @@ impl Taylor {
         use symm::PointGroup::*;
         match pg {
             C1 => (None, None),
-            Cs { .. } | C2 { .. } => c2_cs_checks(&irreps),
+            Cs { .. } => c2_cs_checks(&irreps, App),
+            C2 { .. } => c2_cs_checks(&irreps, B),
             C2v { axis: _, planes: _ } => {
                 let mut checks = Checks::default();
                 // first one you hit goes in checks.0, second goes in checks.1
@@ -270,25 +271,22 @@ impl Taylor {
     }
 }
 
-/// helper function for generating the checks for C2 and Cs point groups
+/// helper function for generating the checks for C2 and Cs point groups.
+/// `target` is the irrep to treat specially. it should be `B` for C2 and `App`
+/// for Cs
 fn c2_cs_checks(
     irreps: &Vec<(usize, Irrep)>,
+    target: Irrep,
 ) -> (Option<Checks>, Option<Checks>) {
-    use Irrep::*;
-    // only A'' modes go in checks[0], other two checks are 0-0
     let mut checks = Checks::default();
     for i in irreps {
-        match i.1 {
-            Ap => (),
-            App => {
-                if checks[(0, 0)] == 0 {
-                    checks[(0, 0)] = i.0 + 1;
-                    checks[(0, 1)] = i.0 + 1;
-                } else if i.0 + 1 > checks[(0, 1)] {
-                    checks[(0, 1)] = i.0 + 1;
-                }
+        if i.1 == target {
+            if checks[(0, 0)] == 0 {
+                checks[(0, 0)] = i.0 + 1;
+                checks[(0, 1)] = i.0 + 1;
+            } else if i.0 + 1 > checks[(0, 1)] {
+                checks[(0, 1)] = i.0 + 1;
             }
-            _ => panic!("non-Cs irrep found in Cs point group"),
         }
     }
     (Some(checks.clone()), Some(checks))
