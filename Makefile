@@ -1,6 +1,9 @@
 test:
 	cargo test -- --nocapture --test-threads=1
 
+clippy:
+	cargo clippy --tests
+
 .PHONY: run
 run:
 	cargo run -p taylor-bin testfiles/intder.in $(ARGS)
