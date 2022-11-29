@@ -87,7 +87,9 @@ impl Taylor {
                                 checks[(2, 1)] = i.0 + 1;
                             }
                         }
-                        _ => panic!("non-C2v irrep found in C2v point group"),
+                        _ => eprintln!(
+                            "warning: non-C2v irrep found in C2v point group"
+                        ),
                     }
                 }
                 (Some(checks.clone()), Some(checks))
