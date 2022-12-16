@@ -44,6 +44,16 @@ impl Disps {
     }
 }
 
+impl IntoIterator for Disps {
+    type Item = Vec<isize>;
+
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+	self.0.into_iter()
+    }
+}
+
 impl Taylor {
     /// generate the Taylor series mod and equivalence checks from `irreps` in
     /// `pg`
