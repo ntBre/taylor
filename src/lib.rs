@@ -64,28 +64,13 @@ impl Taylor {
                     match i.1 {
                         A1 => (),
                         B1 => {
-                            if checks[(0, 0)] == 0 {
-                                checks[(0, 0)] = i.0 + 1;
-                                checks[(0, 1)] = i.0 + 1;
-                            } else if i.0 + 1 > checks[(0, 1)] {
-                                checks[(0, 1)] = i.0 + 1;
-                            }
+                            checks.0[1].push(i.0 + 1);
                         }
                         B2 => {
-                            if checks[(1, 0)] == 0 {
-                                checks[(1, 0)] = i.0 + 1;
-                                checks[(1, 1)] = i.0 + 1;
-                            } else if i.0 + 1 > checks[(1, 1)] {
-                                checks[(1, 1)] = i.0 + 1;
-                            }
+                            checks.0[0].push(i.0 + 1);
                         }
                         A2 => {
-                            if checks[(2, 0)] == 0 {
-                                checks[(2, 0)] = i.0 + 1;
-                                checks[(2, 1)] = i.0 + 1;
-                            } else if i.0 + 1 > checks[(2, 1)] {
-                                checks[(2, 1)] = i.0 + 1;
-                            }
+                            checks.0[2].push(i.0 + 1);
                         }
                         _ => eprintln!(
                             "warning: non-C2v irrep found in C2v point group"
@@ -283,12 +268,7 @@ fn c2_cs_checks(
     let mut checks = Checks::default();
     for i in irreps {
         if i.1 == target {
-            if checks[(0, 0)] == 0 {
-                checks[(0, 0)] = i.0 + 1;
-                checks[(0, 1)] = i.0 + 1;
-            } else if i.0 + 1 > checks[(0, 1)] {
-                checks[(0, 1)] = i.0 + 1;
-            }
+            checks.0[0].push(i.0 + 1);
         }
     }
     (Some(checks.clone()), Some(checks))
