@@ -69,8 +69,8 @@ fn main() -> std::io::Result<()> {
     }
     let mol = {
         let mut mol = Molecule::new(atoms);
-	// NOTE could actually check for linearity here by returning rotor type
-	// from normalize
+        // NOTE could actually check for linearity here by returning rotor type
+        // from normalize
         mol.normalize();
         mol
     };

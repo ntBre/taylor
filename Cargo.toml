@@ -9,6 +9,7 @@ edition = "2021"
 symm = { path = "/home/brent/Projects/symm" }
 nalgebra = "0.31.1"
 rust-anpass = { path = "/home/brent/Projects/rust-anpass" }
+serde = "1.0.152"
 
 [workspace]
 members = [

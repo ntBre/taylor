@@ -1,6 +1,7 @@
 // could I use const generics for these for m and n?
 use nalgebra as na;
 use rust_anpass::Anpass;
+use serde::{Deserialize, Serialize};
 use symm::{Irrep, PointGroup};
 
 pub use checks::*;
@@ -10,12 +11,12 @@ pub mod checks;
 mod tests;
 
 /// a taylor series expansion of f(x1, x2, ... n) of order m-1
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Taylor {
     pub forces: Vec<Vec<usize>>,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Disps(Vec<Vec<isize>>);
 
 impl Disps {
@@ -50,7 +51,7 @@ impl IntoIterator for Disps {
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-	self.0.into_iter()
+        self.0.into_iter()
     }
 }
 
