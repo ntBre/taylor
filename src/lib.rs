@@ -92,8 +92,12 @@ impl Taylor {
             }
             D2h { .. } => todo!(),
             C3v { .. } => todo!(),
-            D3h { .. } => todo!(),
             C5v { .. } => todo!(),
+            // these two have c2v as subgroups, so really I could defer to that,
+            // but I would have had to defer to it at the irreps stage, which I
+            // might have already done??
+            D3h { .. } => todo!(),
+            D5h { .. } => todo!(),
         }
     }
 
