@@ -98,6 +98,9 @@ impl Taylor {
             // might have already done??
             D3h { .. } => todo!(),
             D5h { .. } => todo!(),
+	    // could also use c2_cs_checks here, but only if the irreps were
+	    // detected previously
+            C2h { .. } => todo!(),
         }
     }
 
