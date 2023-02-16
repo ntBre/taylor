@@ -90,17 +90,12 @@ impl Taylor {
                 }
                 (Some(checks.clone()), Some(checks))
             }
-            D2h { .. } => todo!(),
-            C3v { .. } => todo!(),
-            C5v { .. } => todo!(),
-            // these two have c2v as subgroups, so really I could defer to that,
-            // but I would have had to defer to it at the irreps stage, which I
-            // might have already done??
-            D3h { .. } => todo!(),
-            D5h { .. } => todo!(),
-	    // could also use c2_cs_checks here, but only if the irreps were
-	    // detected previously
-            C2h { .. } => todo!(),
+            // if we don't know how to handle the symmetry, just print a warning
+            // and don't
+            _ => {
+                eprintln!("don't know how to handle taylor for {pg}");
+                (None, None)
+            }
         }
     }
 
