@@ -1,18 +1,14 @@
+use std::str::FromStr;
+
 use symm::{Axis, Plane};
 
 use super::*;
 
-fn load_vec_isize(filename: &str) -> Vec<Vec<isize>> {
-    let mut ret = Vec::new();
-    let contents = std::fs::read_to_string(filename).unwrap();
-    let lines = contents.lines();
-    for line in lines {
-        ret.push(line.split(',').map(|s| s.parse().unwrap()).collect());
-    }
-    ret
-}
-
-fn load_vec_usize(filename: &str) -> Vec<Vec<usize>> {
+fn load_vec<T>(filename: &str) -> Vec<Vec<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: std::fmt::Debug,
+{
     let mut ret = Vec::new();
     let contents = std::fs::read_to_string(filename).unwrap();
     let lines = contents.lines();
@@ -50,7 +46,7 @@ fn test_forces_with_checks() {
         Some(Checks([vec![5, 6, 7], vec![8], vec![9]])),
         Some(Checks([vec![5, 6, 7], vec![8], vec![9]])),
     );
-    let want = load_vec_usize("testfiles/force.txt");
+    let want = load_vec::<u8>("testfiles/force.txt");
     assert_eq!(got.forces, want);
 }
 
@@ -79,7 +75,7 @@ fn test_forces_with_zero_checks() {
 #[test]
 fn test_disps() {
     let got = Taylor::new(5, 3, None, None).disps();
-    let mut want = Disps(load_vec_isize("testfiles/dispu.h2o.txt"));
+    let mut want = Disps(load_vec::<i8>("testfiles/dispu.h2o.txt"));
     // the order doesn't matter, so let rust sort both
     want.sort();
     assert_eq!(got, want);
@@ -94,7 +90,7 @@ fn test_disps_with_checks() {
         Some(Checks([vec![5, 6, 7], vec![8], vec![9]])),
     )
     .disps();
-    let mut want = Disps(load_vec_isize("testfiles/dispu.c3h2.mod.txt"));
+    let mut want = Disps(load_vec::<i8>("testfiles/dispu.c3h2.mod.txt"));
     want.sort();
     assert_eq!(got, want);
 }
@@ -108,7 +104,7 @@ fn test_disps_with_zero_checks() {
         Some(Checks([vec![3], vec![], vec![]])),
     )
     .disps();
-    let mut want = Disps(load_vec_isize("testfiles/dispu.h2o.mod.txt"));
+    let mut want = Disps(load_vec::<i8>("testfiles/dispu.h2o.mod.txt"));
     want.sort();
     assert_eq!(got, want);
 }
