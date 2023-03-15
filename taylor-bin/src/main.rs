@@ -28,6 +28,13 @@ fn irrep(ir: &symm::Irrep) -> &'static str {
         symm::Irrep::A1pp => "a_1''",
         symm::Irrep::A2pp => "a_2''",
         symm::Irrep::Epp => "e''",
+        symm::Irrep::E1 => todo!(),
+        symm::Irrep::E2 => todo!(),
+        symm::Irrep::Bg => todo!(),
+        symm::Irrep::Bu => todo!(),
+        symm::Irrep::E1p => todo!(),
+        symm::Irrep::E2p => todo!(),
+        symm::Irrep::E => todo!(),
     }
 }
 
@@ -104,14 +111,14 @@ fn main() -> std::io::Result<()> {
     } else {
         0
     };
-    let disps = intder.convert_disps();
+    let disps = intder.convert_disps().unwrap();
 
     let atomic_numbers = mol.atomic_numbers();
     let mut irreps = Vec::new();
     for (i, disp) in disps.iter().enumerate() {
         let disp = disp.as_slice();
         let m = Molecule::from_slices(
-            atomic_numbers.clone(),
+            &atomic_numbers,
             &disp[..disp.len() - 3 * ndum],
         );
         let irrep = match m.irrep_approx(&pg, cfg.eps) {
