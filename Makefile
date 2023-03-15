@@ -2,7 +2,7 @@ test:
 	cargo test -- --nocapture --test-threads=1
 
 clippy:
-	cargo clippy --tests
+	cargo clippy --workspace
 
 .PHONY: run
 run:
