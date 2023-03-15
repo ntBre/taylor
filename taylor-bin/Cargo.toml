@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.0.18", features = ["derive"] }
-intder = { path = "/home/brent/Projects/intder" }
-symm = { path = "/home/brent/Projects/symm" }
+intder = { git = "https://github.com/ntBre/intder" }
+symm = { git = "https://github.com/ntBre/symm" }
 taylor = { path = ".." }
