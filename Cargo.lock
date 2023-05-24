@@ -355,7 +355,7 @@ dependencies = [
 [[package]]
 name = "intder"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/intder#5a0da53f7cdbd024edb1bf414a55925c71f108e5"
+source = "git+https://github.com/ntBre/intder#c3a719bef35204d9c3da42c4169add3e4ca4c7cd"
 dependencies = [
  "approx",
  "lazy_static",
@@ -580,7 +580,7 @@ dependencies = [
 [[package]]
 name = "psqs"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/psqs#d2ab16f4e6670d4b4cbbdfbdcbeed45a7f3e111e"
+source = "git+https://github.com/ntBre/psqs#ca63e6b275d1069d394953a4ed713d1ddc93b41c"
 dependencies = [
  "chrono",
  "lazy_static",
