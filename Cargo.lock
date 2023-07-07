@@ -296,7 +296,7 @@ dependencies = [
 [[package]]
 name = "intder"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/intder#ee4dfbb8d5aa80a974d57c00bea4107fb0a32eb5"
+source = "git+https://github.com/ntBre/intder#999cc1b709067b22b81a94cbcbcd9859d1cf9c34"
 dependencies = [
  "approx",
  "nalgebra",
@@ -309,9 +309,9 @@ dependencies = [
 
 [[package]]
 name = "is-terminal"
-version = "0.4.8"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24fddda5af7e54bf7da53067d6e802dbcc381d0a8eef629df528e3ebf68755cb"
+checksum = "cb0889898416213fab133e1d33a0e5858a48177452750691bde3666d0fdbaf8b"
 dependencies = [
  "hermit-abi",
  "rustix",
@@ -573,9 +573,8 @@ checksum = "2ab07dc67230e4a4718e70fd5c20055a4334b121f1f9db8fe63ef39ce9b8c846"
 [[package]]
 name = "rust-anpass"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/rust-anpass#984cda6abf35f98375b450b1e9899184eb7fc2a7"
+source = "git+https://github.com/ntBre/rust-anpass#55caab4f22db5eca777fb2c88df147a2a4ae2a5f"
 dependencies = [
- "approx",
  "nalgebra",
  "regex",
 ]
