@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 symm = { git = "https://github.com/ntBre/symm" }
-nalgebra = "0.32.2"
+nalgebra = "0.32.3"
 rust-anpass = { git = "https://github.com/ntBre/rust-anpass" }
 serde = "1.0.167"
 
