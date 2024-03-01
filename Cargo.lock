@@ -484,7 +484,7 @@ checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 [[package]]
 name = "rust-anpass"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/rust-anpass#36be273b045d13914db93bb89873336ab6cd1811"
+source = "git+https://github.com/ntBre/rust-anpass#5d6fb09dece694ac2bdc88f559da3c34e3ef4481"
 dependencies = [
  "nalgebra",
  "regex",
