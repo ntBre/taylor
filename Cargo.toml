@@ -9,7 +9,7 @@ edition = "2021"
 symm = { git = "https://github.com/ntBre/symm" }
 nalgebra = "0.32.4"
 rust-anpass = { git = "https://github.com/ntBre/rust-anpass" }
-serde = "1.0.202"
+serde = "1.0.203"
 
 [workspace]
 members = [
