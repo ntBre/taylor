@@ -161,7 +161,7 @@ dependencies = [
  "heck",
  "proc-macro2",
  "quote",
- "syn 2.0.48",
+ "syn",
 ]
 
 [[package]]
@@ -248,7 +248,7 @@ version = "0.1.0"
 source = "git+https://github.com/ntBre/intder#47e907aa5cf60da3bae213fdb1a324c0da9fb616"
 dependencies = [
  "approx",
- "nalgebra",
+ "nalgebra 0.32.4",
  "ndarray",
  "psqs",
  "regex",
@@ -312,19 +312,35 @@ dependencies = [
  "num-rational",
  "num-traits",
  "serde",
- "simba",
+ "simba 0.8.1",
+ "typenum",
+]
+
+[[package]]
+name = "nalgebra"
+version = "0.33.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c4b5f057b303842cf3262c27e465f4c303572e7f6b0648f60e16248ac3397f4"
+dependencies = [
+ "approx",
+ "matrixmultiply",
+ "nalgebra-macros",
+ "num-complex",
+ "num-rational",
+ "num-traits",
+ "simba 0.9.0",
  "typenum",
 ]
 
 [[package]]
 name = "nalgebra-macros"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91761aed67d03ad966ef783ae962ef9bbaca728d2dd7ceb7939ec110fffad998"
+checksum = "254a5372af8fc138e36684761d3c0cdb758a4410e938babcff1c860ce14ddbfc"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn",
 ]
 
 [[package]]
@@ -409,7 +425,7 @@ source = "git+https://github.com/ntBre/psqs#a7c64c5510df791ed1f601f863fdb2c05111
 dependencies = [
  "chrono",
  "libc",
- "nalgebra",
+ "nalgebra 0.32.4",
  "rayon",
  "regex",
  "serde",
@@ -454,9 +470,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.10.3"
+version = "1.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b62dbe01f0b06f9d8dc7d49e05a0785f153b00b2c227856282f671e0318c9b15"
+checksum = "b91213439dad192326a0d7c6ee3955910425f441d7038e0d6933b0aec5c4517f"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -484,9 +500,9 @@ checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 [[package]]
 name = "rust-anpass"
 version = "0.1.0"
-source = "git+https://github.com/ntBre/rust-anpass#36be273b045d13914db93bb89873336ab6cd1811"
+source = "git+https://github.com/ntBre/rust-anpass#3fafacb42f2a1cde4d7eabb2e352ec37723636b6"
 dependencies = [
- "nalgebra",
+ "nalgebra 0.33.0",
  "regex",
 ]
 
@@ -522,7 +538,7 @@ checksum = "6048858004bcff69094cd972ed40a32500f153bd3be9f716b2eed2e8217c4838"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.48",
+ "syn",
 ]
 
 [[package]]
@@ -550,6 +566,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "simba"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3a386a501cd104797982c15ae17aafe8b9261315b5d07e3ec803f2ea26be0fa"
+dependencies = [
+ "approx",
+ "num-complex",
+ "num-traits",
+ "paste",
+ "wide",
+]
+
+[[package]]
 name = "strsim"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -561,19 +590,8 @@ version = "0.1.0"
 source = "git+https://github.com/ntBre/symm#bf37e0f92b3f388b69b5eeefb6d86c0d9f36286b"
 dependencies = [
  "approx",
- "nalgebra",
+ "nalgebra 0.32.4",
  "serde",
-]
-
-[[package]]
-name = "syn"
-version = "1.0.109"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
-dependencies = [
- "proc-macro2",
- "quote",
- "unicode-ident",
 ]
 
 [[package]]
@@ -591,7 +609,7 @@ dependencies = [
 name = "taylor"
 version = "0.1.0"
 dependencies = [
- "nalgebra",
+ "nalgebra 0.32.4",
  "rust-anpass",
  "serde",
  "symm",
@@ -646,7 +664,7 @@ dependencies = [
  "once_cell",
  "proc-macro2",
  "quote",
- "syn 2.0.48",
+ "syn",
  "wasm-bindgen-shared",
 ]
 
@@ -668,7 +686,7 @@ checksum = "bae1abb6806dc1ad9e560ed242107c0f6c84335f1749dd4e8ddb012ebd5e25a7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.48",
+ "syn",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]
